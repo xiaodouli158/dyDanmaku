@@ -1,0 +1,219 @@
+$redCirBg: #ff6157;
+$redCirBd: #e24640;
+$yellowCirBg: #ffc12f;
+$yellowCirBd: #dfa023;
+$greenCirBg: #2acb42;
+$greenCirBd: #1bac2c;
+
+$shadowB0: #000000;
+$shadowB1: rgba(0, 0, 0, 0.1);
+$shadowB2: rgba(0, 0, 0, 0.2);
+$shadowB3: rgba(0, 0, 0, 0.3);
+$shadowB12: rgba(0, 0, 0, 0.12);
+$shadowB15: rgba(0, 0, 0, 0.15);
+$shadowB05: rgba(0, 0, 0, 0.05);
+
+$shadowW2: rgba(255, 255, 255, 0.2);
+$shadowW6: rgba(255, 255, 255, 0.6);
+
+$lightBd: rgba(0, 0, 0, 0.6);
+$lightBarBg: #fcfcfc;
+$lightBg: #ececec;
+$lightText: #4b4b4b;
+
+$darkBd: rgba(0, 0, 0, 0.6);
+$darkBarBg: #363636;
+$darkBg: #262626;
+$darkText: #a5a5a5;
+
+.mac-prefix {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  
+  .cir {
+    width: 0.8rem;
+    height: 0.8rem;
+    box-sizing: border-box;
+    border-radius: 50%;
+    
+    &.red {
+      background-color: $redCirBg;
+      border: 0.5px solid $redCirBd;
+    }
+    &.yellow {
+      background-color: $yellowCirBg;
+      border: 0.5px solid $yellowCirBd;
+    }
+    &.green {
+      background-color: $greenCirBg;
+      border: 0.5px solid $greenCirBd;
+    }
+  }
+}
+
+.cast-list {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  box-shadow: 0px 5px 10px 0px $shadowB3, 0px 3px 6px 0px $shadowB15, 0 0 1px 0 $lightBd;
+  border-radius: 0.5rem;
+  background-color: $lightBg;
+  overflow: hidden;
+  position: relative;
+  
+  .mac-prefix {
+    position: absolute;
+    left: 8px;
+  }
+  
+  &.no-prefix {
+    .mac-prefix {
+      display: none;
+    }
+  }
+  
+  &.pos-left {
+    .cast-list-header {
+      .title {
+        justify-content: flex-start;
+      }
+    }
+  }
+  
+  &.theme-dark {
+    background-color: $darkBg;
+    border: 0.5px solid $shadowW2;
+    box-shadow: 0px 6px 10px 0px $shadowB2, 0px 3px 6px 0px $shadowB12, inset 0px 0.5px 0.5px 0px $shadowW6;
+    
+    .cast-list-header {
+      background-color: $darkBarBg;
+      box-shadow: 0px 1px 0px 0px $shadowB3, 0px 0.5px 0px 0px $shadowB0;
+    }
+    
+    .title {
+      color: $darkText;
+    }
+    
+    .cast-list-main {
+      .scroller {
+        &::-webkit-scrollbar {
+          width: 5px;
+        }
+        &::-webkit-scrollbar-thumb {
+          background: #3f3f3f;
+          border-radius: 2.5px;
+        }
+        &::-webkit-scrollbar-thumb:hover {
+          background: #595959;
+        }
+        &::-webkit-scrollbar-thumb:active {
+          background: #616161;
+        }
+        &::-webkit-scrollbar-track {
+          background: rgba(61, 61, 61, 0.5);
+          border-radius: 2.5px;
+        }
+      }
+    }
+  }
+}
+
+.cast-list-header {
+  position: relative;
+  width: 100%;
+  height: 2rem;
+  flex-shrink: 0;
+  background-color: $lightBarBg;
+  box-sizing: border-box;
+  padding: 3px 8px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0px 1px 0px 0px $shadowB05, 0px 0.5px 0px 0px $shadowB1;
+  
+  .title {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: 'mkwxy';
+    font-size: 1rem;
+    font-weight: bold;
+    color: $lightText;
+    box-sizing: border-box;
+    
+    label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      box-sizing: border-box;
+    }
+  }
+  
+  .type-icons {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    box-sizing: border-box;
+    position: absolute;
+    right: 12px;
+  }
+}
+
+.cast-list-main {
+  position: relative;
+  width: 100%;
+  flex-grow: 1;
+  box-sizing: border-box;
+  overflow-y: auto;
+  padding: 12px 8px;
+  
+  .scroller {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 2.5px;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background: #bbb;
+    }
+    &::-webkit-scrollbar-thumb:active {
+      background: #999;
+    }
+    &::-webkit-scrollbar-track {
+      background: rgba(217, 217, 217, 0.3);
+      border-radius: 2.5px;
+    }
+  }
+}
+
+@-moz-document url-prefix() {
+  .cast-list-main {
+    .scroller {
+      scrollbar-width: thin;
+      scrollbar-color: #ccc rgba(217, 217, 217, 0.3);
+    }
+  }
+  .cast-list {
+    &.theme-dark {
+      .cast-list-main {
+        .scroller {
+          scrollbar-width: thin;
+          scrollbar-color: #4f4f4f rgba(61, 61, 61, 0.5);
+        }
+      }
+    }
+  }
+}

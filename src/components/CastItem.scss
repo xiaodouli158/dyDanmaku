@@ -1,0 +1,93 @@
+$prefixColor: #38b48b;
+$nameColor: #9079ad;
+$textColor: #6b798e;
+
+$prefixDarkColor: #38b48b;
+$nameDarkColor: #83ccd2;
+$textDarkColor: #f7fcfe;
+
+$giftText: #eba825;
+
+.cast-item {
+  width: 100%;
+  display: flex;
+  padding-bottom: 3px;
+  font-family: 'dymht';
+  font-size: 1rem;
+  
+  .prefix {
+    font-family: 'mkwxy';
+    color: $prefixColor;
+    flex-shrink: 0;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    margin-right: 5px;
+  }
+  
+  .nickname {
+    margin-right: 3px;
+    font-family: 'mkwxy';
+    color: $nameColor;
+    flex-shrink: 0;
+  }
+  
+  .text {
+    color: $textColor;
+    word-break: break-all;
+    white-space: normal;
+  }
+  
+  .icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    object-fit: cover;
+    padding: 0 3px;
+    vertical-align: text-bottom;
+  }
+  
+  .emoji {
+    height: 2rem;
+    object-fit: cover;
+    padding: 0 3px;
+    vertical-align: text-bottom;
+  }
+  
+  .content {
+    width: 0;
+    margin: 0;
+    flex-grow: 1;
+    line-height: 1.5rem;
+  }
+  
+  &.gift-cast {
+    .text {
+      color: $giftText;
+    }
+  }
+  
+  &.emoji-cast {
+    .prefix {
+      line-height: 2.4rem;
+    }
+    .content {
+      line-height: 2.4rem;
+    }
+    .emoji {
+      vertical-align: middle;
+    }
+  }
+}
+
+.theme-dark {
+  .cast-item {
+    .prefix {
+      color: $prefixDarkColor;
+    }
+    .nickname {
+      color: $nameDarkColor;
+    }
+    .text {
+      color: $textDarkColor;
+    }
+  }
+}

@@ -1,0 +1,149 @@
+$bg: #f7f6f5;
+$bd: #b2bfc3;
+$theme: #68be8d;
+$tool: #8b968d;
+
+.index-view {
+  position: relative;
+  background-color: $bg;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  
+  .view-left,
+  .view-center,
+  .view-right {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+    width: 0;
+    flex-shrink: 0;
+  }
+  
+  .view-left {
+    flex-grow: 2.5;
+    border-right: 1px solid $bd;
+    justify-content: space-between;
+  }
+  
+  .view-left-bottom {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: 12px 0;
+    
+    .hr {
+      height: 0;
+      border: 0;
+      border-top: 1px solid $bd;
+      margin: 5px 0;
+    }
+  }
+  
+  .view-left-tools {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    box-sizing: border-box;
+    padding: 0 12px;
+  }
+  
+  .view-left-tool {
+    font-size: 21px;
+    width: 1.2em;
+    height: 1.2em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: $tool;
+    transition: color 0.2s ease-in-out, background-color 0.3s ease-in-out, opacity 0.2s ease;
+    background-color: transparent;
+    border-radius: 0.4em;
+    cursor: pointer;
+    
+    i {
+      font-size: 1em;
+    }
+    
+    &:hover {
+      color: #fff;
+      background-color: $theme;
+    }
+    
+    &:active {
+      opacity: 0.8;
+    }
+  }
+  
+  .view-center {
+    flex-grow: 4.5;
+    padding: 18px 12px;
+  }
+  
+  .view-right {
+    flex-grow: 3;
+    border-left: 1px solid $bd;
+    padding: 18px 12px;
+    gap: 12px;
+  }
+  
+  .view-input {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .view-other {
+    display: flex;
+    width: 100%;
+    height: 0;
+    flex-grow: 1;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 768px) {
+  .index-view {
+    flex-direction: column;
+    height: auto;
+    
+    .view-left,
+    .view-center,
+    .view-right {
+      width: 100%;
+      flex-grow: 0;
+      border: none;
+    }
+    
+    .view-left {
+      margin-top: 250px;
+      justify-content: flex-start;
+    }
+    
+    .view-center {
+      height: 100vh;
+    }
+    
+    .view-right {
+      height: 80vh;
+    }
+    
+    .view-input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      box-sizing: border-box;
+      padding: 18px 12px;
+    }
+    
+    .view-left-bottom {
+      position: absolute;
+      top: 150px;
+      left: 0;
+    }
+  }
+}
