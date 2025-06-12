@@ -40,6 +40,11 @@ const CastList = forwardRef<CastListRef, CastListProps>(({
   const listRef = useRef<List>(null);
   const isAtBottomRef = useRef(true);
 
+  // 容器引用和高度状态
+  const containerRef = useRef<HTMLDivElement>(null);
+  const mainRef = useRef<HTMLDivElement>(null);
+  const [containerHeight, setContainerHeight] = useState<number>(300);
+
   // 判断是否滚动到底部的容差值
   const SCROLL_BTH = 50;
 
@@ -125,6 +130,44 @@ const CastList = forwardRef<CastListRef, CastListProps>(({
     clearCasts
   }), [appendCasts, clearCasts]);
 
+  // 监听容器高度变化
+  useEffect(() => {
+    const updateHeight = () => {
+      const mainElement = mainRef.current;
+      if (!mainElement) return;
+
+      // 获取main容器的实际高度，减去padding(24px)
+      const rect = mainElement.getBoundingClientRect();
+      const availableHeight = Math.max(200, rect.height - 24);
+      setContainerHeight(availableHeight);
+    };
+
+    // 初始设置
+    updateHeight();
+
+    // 监听窗口大小变化
+    window.addEventListener('resize', updateHeight);
+
+    // 使用MutationObserver监听DOM变化
+    const observer = new MutationObserver(updateHeight);
+    if (mainRef.current) {
+      observer.observe(mainRef.current, {
+        attributes: true,
+        childList: true,
+        subtree: true
+      });
+    }
+
+    // 定时更新，确保高度正确
+    const interval = setInterval(updateHeight, 1000);
+
+    return () => {
+      window.removeEventListener('resize', updateHeight);
+      observer.disconnect();
+      clearInterval(interval);
+    };
+  }, []);
+
   // 初始化
   useEffect(() => {
     console.log(`🎯 CastList (${title}) initializing with types:`, types);
@@ -170,7 +213,7 @@ const CastList = forwardRef<CastListRef, CastListProps>(({
   };
 
   return (
-    <div className={getClassName()}>
+    <div className={getClassName()} ref={containerRef}>
       <div className="cast-list-header">
         {/* MAC 前缀 */}
         <div className="mac-prefix">
@@ -186,10 +229,10 @@ const CastList = forwardRef<CastListRef, CastListProps>(({
           {/* 这里可以添加类型控制按钮 */}
         </div>
       </div>
-      <div className="cast-list-main">
+      <div className="cast-list-main" ref={mainRef}>
         <List
           ref={listRef}
-          height={Math.max(300, window.innerHeight * 0.4)}
+          height={containerHeight}
           itemCount={casts.length}
           itemSize={50} // 每项的估计高度
           onScroll={handleScroll}

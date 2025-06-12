@@ -436,24 +436,6 @@ const IndexView: React.FC = () => {
           userCount={userCount}
           likeCount={likeCount}
         />
-        <div className="view-left-bottom">
-          <div className="view-left-tools">
-            <div className="view-left-tool" title="保存弹幕" onClick={saveCastToFile}>
-              <i className="ice-save"></i>
-            </div>
-            <div className="view-left-tool" title="测试社交消息" onClick={testSocialMessages}>
-              <i className="ice-test">🧪</i>
-            </div>
-          </div>
-          <hr className="hr" />
-          <LiveStatusPanel ref={statusPanelRef} status={connectStatus} />
-        </div>
-      </div>
-      <div className="view-center">
-        {/* 主要弹幕：聊天、礼物 */}
-        <CastList types={['chat', 'gift']} ref={castRef} />
-      </div>
-      <div className="view-right">
         <div className="view-input">
           <ConnectInput
             ref={roomInputRef}
@@ -478,17 +460,33 @@ const IndexView: React.FC = () => {
             onCancel={stopRelayCast}
           />
         </div>
-        <div className="view-other">
-          {/* 其它弹幕：关注、点赞、进入、控制台等 */}
-          <CastList
-            ref={otherRef}
-            title="社交信息"
-            types={['social', 'like', 'member']}
-            pos="left"
-            noPrefix
-            theme="dark"
-          />
+        <div className="view-left-bottom">
+          <div className="view-left-tools">
+            <div className="view-left-tool" title="保存弹幕" onClick={saveCastToFile}>
+              <i className="ice-save"></i>
+            </div>
+            <div className="view-left-tool" title="测试社交消息" onClick={testSocialMessages}>
+              <i className="ice-test">🧪</i>
+            </div>
+          </div>
+          <hr className="hr" />
+          <LiveStatusPanel ref={statusPanelRef} status={connectStatus} />
         </div>
+      </div>
+      <div className="view-center">
+        {/* 主要弹幕：聊天、礼物 */}
+        <CastList types={['chat', 'gift']} ref={castRef} />
+      </div>
+      <div className="view-right">
+        {/* 其它弹幕：关注、点赞、进入、控制台等 */}
+        <CastList
+          ref={otherRef}
+          title="社交信息"
+          types={['social', 'like', 'member']}
+          pos="left"
+          noPrefix
+          theme="dark"
+        />
       </div>
     </div>
   );

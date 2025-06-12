@@ -59,6 +59,7 @@ $darkText: #a5a5a5;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
+  min-height: 400px;
   box-shadow: 0px 5px 10px 0px $shadowB3, 0px 3px 6px 0px $shadowB15, 0 0 1px 0 $lightBd;
   border-radius: 0.5rem;
   background-color: $lightBg;
@@ -169,12 +170,10 @@ $darkText: #a5a5a5;
   width: 100%;
   flex-grow: 1;
   box-sizing: border-box;
-  overflow-y: auto;
+  overflow: hidden;
   padding: 12px 8px;
-  
+
   .scroller {
-    display: flex;
-    flex-direction: column;
     width: 100%;
     height: 100%;
     box-sizing: border-box;

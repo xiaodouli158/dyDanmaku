@@ -25,6 +25,8 @@ $tool: #8b968d;
     flex-grow: 2.5;
     border-right: 1px solid $bd;
     justify-content: space-between;
+    padding: 18px 12px;
+    gap: 12px;
   }
   
   .view-left-bottom {
@@ -81,30 +83,34 @@ $tool: #8b968d;
   .view-center {
     flex-grow: 4.5;
     padding: 18px 12px;
+    display: flex;
+    flex-direction: column;
+
+    .cast-list {
+      flex: 1;
+      min-height: 400px;
+    }
   }
-  
+
   .view-right {
     flex-grow: 3;
     border-left: 1px solid $bd;
     padding: 18px 12px;
-    gap: 12px;
     display: flex;
     flex-direction: column;
+
+    .cast-list {
+      flex: 1;
+      min-height: 400px;
+    }
   }
-  
+
   .view-input {
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 5px;
-  }
-  
-  .view-other {
-    display: flex;
-    width: 100%;
-    min-height: 300px;
-    flex-grow: 1;
-    box-sizing: border-box;
+    flex-shrink: 0;
   }
 }
 
@@ -112,7 +118,7 @@ $tool: #8b968d;
   .index-view {
     flex-direction: column;
     height: auto;
-    
+
     .view-left,
     .view-center,
     .view-right {
@@ -120,32 +126,30 @@ $tool: #8b968d;
       flex-grow: 0;
       border: none;
     }
-    
+
     .view-left {
-      margin-top: 250px;
+      height: auto;
       justify-content: flex-start;
+      padding: 12px;
+      gap: 8px;
     }
-    
+
     .view-center {
-      height: 100vh;
+      height: 60vh;
+      min-height: 400px;
     }
-    
+
     .view-right {
-      height: 80vh;
+      height: 40vh;
+      min-height: 300px;
     }
-    
+
     .view-input {
-      position: absolute;
-      top: 0;
-      left: 0;
-      box-sizing: border-box;
-      padding: 18px 12px;
+      gap: 8px;
     }
-    
+
     .view-left-bottom {
-      position: absolute;
-      top: 150px;
-      left: 0;
+      margin-top: 8px;
     }
   }
 }
