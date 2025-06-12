@@ -1,9 +1,4 @@
-$redCirBg: #ff6157;
-$redCirBd: #e24640;
-$yellowCirBg: #ffc12f;
-$yellowCirBd: #dfa023;
-$greenCirBg: #2acb42;
-$greenCirBd: #1bac2c;
+
 
 $shadowB0: #000000;
 $shadowB1: rgba(0, 0, 0, 0.1);
@@ -26,32 +21,7 @@ $darkBarBg: #363636;
 $darkBg: #262626;
 $darkText: #a5a5a5;
 
-.mac-prefix {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  
-  .cir {
-    width: 0.8rem;
-    height: 0.8rem;
-    box-sizing: border-box;
-    border-radius: 50%;
-    
-    &.red {
-      background-color: $redCirBg;
-      border: 0.5px solid $redCirBd;
-    }
-    &.yellow {
-      background-color: $yellowCirBg;
-      border: 0.5px solid $yellowCirBd;
-    }
-    &.green {
-      background-color: $greenCirBg;
-      border: 0.5px solid $greenCirBd;
-    }
-  }
-}
+
 
 .cast-list {
   display: flex;
@@ -66,16 +36,7 @@ $darkText: #a5a5a5;
   overflow: hidden;
   position: relative;
   
-  .mac-prefix {
-    position: absolute;
-    left: 8px;
-  }
-  
-  &.no-prefix {
-    .mac-prefix {
-      display: none;
-    }
-  }
+
   
   &.pos-left {
     .cast-list-header {

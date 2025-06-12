@@ -484,7 +484,6 @@ const IndexView: React.FC = () => {
           title="社交信息"
           types={['social', 'like', 'member']}
           pos="left"
-          noPrefix
           theme="dark"
         />
       </div>

@@ -13,7 +13,6 @@ interface CastListProps {
   theme?: 'light' | 'dark';
   types?: CastType[];
   pos?: 'center' | 'left';
-  noPrefix?: boolean;
 }
 
 export interface CastListRef {
@@ -25,8 +24,7 @@ const CastList = forwardRef<CastListRef, CastListProps>(({
   title = '弹幕信息',
   theme = 'light',
   types = [],
-  pos = 'center',
-  noPrefix = false
+  pos = 'center'
 }, ref) => {
   // 类型控制器
   const typeMapRef = useRef<Map<CastMethod, boolean>>(new Map());
@@ -202,25 +200,18 @@ const CastList = forwardRef<CastListRef, CastListProps>(({
   const getClassName = () => {
     const baseClass = 'cast-list';
     const classes = [baseClass];
-    
+
     if (pos === 'left') classes.push('pos-left');
     if (pos === 'center') classes.push('pos-center');
-    if (noPrefix) classes.push('no-prefix');
     if (theme === 'dark') classes.push('theme-dark');
     if (theme === 'light') classes.push('theme-light');
-    
+
     return classes.join(' ');
   };
 
   return (
     <div className={getClassName()} ref={containerRef}>
       <div className="cast-list-header">
-        {/* MAC 前缀 */}
-        <div className="mac-prefix">
-          <div className="cir red"></div>
-          <div className="cir yellow"></div>
-          <div className="cir green"></div>
-        </div>
         {/* 标题 */}
         <div className="title">
           <label>{title}</label>
