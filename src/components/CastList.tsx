@@ -153,18 +153,6 @@ const CastList = forwardRef<CastListRef, CastListProps>(({
     // 更新过滤状态
     setCastType(type, newState);
 
-    // 如果这是第一次勾选任何类型，需要先隐藏所有其他类型
-    const checkedTypes = types.filter(t => typeVisibility.get(t) ?? false);
-    if (newState && checkedTypes.length === 0) {
-      // 这是第一次勾选，隐藏其他所有类型
-      console.log(`☑️ First selection, hiding other types for ${title}`);
-      types.forEach(t => {
-        if (t !== type) {
-          setCastType(t, false);
-        }
-      });
-    }
-
     console.log(`📊 Type ${type} is now ${newState ? 'visible' : 'hidden'} for ${title}`);
   }, [typeVisibility, setCastType, types, title]);
 
@@ -268,9 +256,9 @@ const CastList = forwardRef<CastListRef, CastListProps>(({
       }
     }
 
-    // 设置初始的typeVisibility状态（所有类型都不勾选）
+    // 设置初始的typeVisibility状态（所有类型都勾选）
     const initialVisibility = new Map<CastType, boolean>();
-    types.forEach(type => initialVisibility.set(type, false));
+    types.forEach(type => initialVisibility.set(type, true));
     setTypeVisibility(initialVisibility);
 
     // 标记为已初始化
