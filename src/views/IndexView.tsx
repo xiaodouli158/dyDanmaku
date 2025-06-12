@@ -423,6 +423,40 @@ const IndexView: React.FC = () => {
     SkMessage.info('已添加测试社交消息');
   }, [handleMessages]);
 
+  /** 测试添加聊天和礼物消息 */
+  const testChatGiftMessages = useCallback(() => {
+    const testMessages: DyMessage[] = [
+      {
+        id: getId(),
+        method: CastMethod.CHAT,
+        user: { name: '聊天用户1' },
+        content: '这是一条测试聊天消息'
+      },
+      {
+        id: getId(),
+        method: CastMethod.GIFT,
+        user: { name: '礼物用户1' },
+        content: '送出了礼物',
+        gift: { name: '玫瑰花', count: 1, price: 1 }
+      },
+      {
+        id: getId(),
+        method: CastMethod.CHAT,
+        user: { name: '聊天用户2' },
+        content: '又一条聊天消息'
+      },
+      {
+        id: getId(),
+        method: CastMethod.GIFT,
+        user: { name: '礼物用户2' },
+        content: '送出了礼物',
+        gift: { name: '小心心', count: 5, price: 5 }
+      }
+    ];
+    handleMessages(testMessages);
+    SkMessage.info('已添加测试聊天和礼物消息');
+  }, [handleMessages]);
+
   return (
     <div className="index-view">
       <div className="view-left">
@@ -464,6 +498,9 @@ const IndexView: React.FC = () => {
           <div className="view-left-tools">
             <div className="view-left-tool" title="保存弹幕" onClick={saveCastToFile}>
               <i className="ice-save"></i>
+            </div>
+            <div className="view-left-tool" title="测试聊天礼物" onClick={testChatGiftMessages}>
+              <i className="ice-test">💬</i>
             </div>
             <div className="view-left-tool" title="测试社交消息" onClick={testSocialMessages}>
               <i className="ice-test">🧪</i>
