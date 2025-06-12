@@ -88,6 +88,8 @@ $tool: #8b968d;
     border-left: 1px solid $bd;
     padding: 18px 12px;
     gap: 12px;
+    display: flex;
+    flex-direction: column;
   }
   
   .view-input {
@@ -100,7 +102,7 @@ $tool: #8b968d;
   .view-other {
     display: flex;
     width: 100%;
-    height: 0;
+    min-height: 300px;
     flex-grow: 1;
     box-sizing: border-box;
   }

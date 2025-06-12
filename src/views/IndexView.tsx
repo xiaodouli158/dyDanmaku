@@ -119,13 +119,13 @@ const IndexView: React.FC = () => {
     const newCasts: DyMessage[] = [];
     const mainCasts: DyMessage[] = [];
     const otherCasts: DyMessage[] = [];
-    
+
     try {
       for (const msg of msgs) {
         if (!msg.id) continue;
         if (castSetRef.current.has(msg.id)) continue;
         castSetRef.current.add(msg.id);
-        
+
         switch (msg.method) {
           case CastMethod.CHAT:
             newCasts.push(msg);
@@ -138,16 +138,19 @@ const IndexView: React.FC = () => {
             }
             break;
           case CastMethod.LIKE:
+            console.log('✅ LIKE message processed:', msg.user?.name, msg.content);
             newCasts.push(msg);
             otherCasts.push(msg);
             setRoomCount(msg.room);
             break;
           case CastMethod.MEMBER:
+            console.log('✅ MEMBER message processed:', msg.user?.name, msg.content);
             newCasts.push(msg);
             otherCasts.push(msg);
             setRoomCount(msg.room);
             break;
           case CastMethod.SOCIAL:
+            console.log('✅ SOCIAL message processed:', msg.user?.name, msg.content);
             newCasts.push(msg);
             otherCasts.push(msg);
             setRoomCount(msg.room);
@@ -172,12 +175,19 @@ const IndexView: React.FC = () => {
             break;
         }
       }
-    } catch (err) {}
-    
+    } catch (err) {
+      console.error('Error processing messages:', err);
+    }
+
     // 记录
     allCastsRef.current.push(...newCasts);
     if (castRef.current) castRef.current.appendCasts(mainCasts);
-    if (otherRef.current) otherRef.current.appendCasts(otherCasts);
+    if (otherRef.current) {
+      if (otherCasts.length > 0) {
+        console.log('Adding to otherRef:', otherCasts.length, 'messages');
+      }
+      otherRef.current.appendCasts(otherCasts);
+    }
     if (relayWsRef.current && relayWsRef.current.isConnected()) {
       relayWsRef.current.send(JSON.stringify(msgs));
     }
@@ -362,7 +372,7 @@ const IndexView: React.FC = () => {
     const date = formatDate(new Date(), 'yyyy-MM-dd_HHmmss');
     const fileName = `[${roomNum}]${date}(${len})`;
     const data = JSON.stringify(allCastsRef.current, null, 2);
-    
+
     FileSaver.save(data, {
       name: fileName,
       ext: '.json',
@@ -384,6 +394,35 @@ const IndexView: React.FC = () => {
       });
   }, [connectStatus, roomNum]);
 
+  /** 测试添加社交消息 */
+  const testSocialMessages = useCallback(() => {
+    const testMessages: DyMessage[] = [
+      {
+        id: getId(),
+        method: CastMethod.LIKE,
+        user: { name: '测试用户1' },
+        content: '为主播点赞了(1)',
+        room: { likeCount: 100 }
+      },
+      {
+        id: getId(),
+        method: CastMethod.MEMBER,
+        user: { name: '测试用户2' },
+        content: '进入直播间',
+        room: { audienceCount: 50 }
+      },
+      {
+        id: getId(),
+        method: CastMethod.SOCIAL,
+        user: { name: '测试用户3' },
+        content: '关注了主播',
+        room: { followCount: 200 }
+      }
+    ];
+    handleMessages(testMessages);
+    SkMessage.info('已添加测试社交消息');
+  }, [handleMessages]);
+
   return (
     <div className="index-view">
       <div className="view-left">
@@ -401,6 +440,9 @@ const IndexView: React.FC = () => {
           <div className="view-left-tools">
             <div className="view-left-tool" title="保存弹幕" onClick={saveCastToFile}>
               <i className="ice-save"></i>
+            </div>
+            <div className="view-left-tool" title="测试社交消息" onClick={testSocialMessages}>
+              <i className="ice-test">🧪</i>
             </div>
           </div>
           <hr className="hr" />
@@ -438,7 +480,14 @@ const IndexView: React.FC = () => {
         </div>
         <div className="view-other">
           {/* 其它弹幕：关注、点赞、进入、控制台等 */}
-          <CastList ref={otherRef} types={['social', 'like', 'member']} pos="left" noPrefix theme="dark" />
+          <CastList
+            ref={otherRef}
+            title="社交信息"
+            types={['social', 'like', 'member']}
+            pos="left"
+            noPrefix
+            theme="dark"
+          />
         </div>
       </div>
     </div>

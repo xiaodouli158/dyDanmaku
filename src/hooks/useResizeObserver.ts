@@ -1,22 +1,6 @@
-import { unrefElement } from '@/utils/vueUtil';
-import { computed, getCurrentScope, onScopeDispose, toValue, watch } from 'vue';
-import type { MaybeRefOrGetter } from 'vue';
-import type { MaybeComputedElementRef, MaybeElement } from '@/utils/vueUtil';
+import { useEffect, useRef } from 'react';
 
-/** @vue/use useResizeObserver */
-
-/**
- * 如果有活跃的 effect 作用域，则调用 onScopeDispose
- *  - 即尝试取消当前作用域内的监听(副作用函数)
- * @param fn
- */
-export function tryOnScopeDispose(fn: () => void) {
-  if (getCurrentScope()) {
-    onScopeDispose(fn);
-    return true;
-  }
-  return false;
-}
+/** React useResizeObserver hook */
 
 export interface UseResizeObserverOptions {
   /*
@@ -30,46 +14,43 @@ export interface UseResizeObserverOptions {
   box?: ResizeObserverBoxOptions;
 }
 
-const defaultWindow = window;
-
 export const useResizeObserver = function (
-  target: MaybeComputedElementRef | MaybeComputedElementRef[] | MaybeRefOrGetter<MaybeElement[]>,
+  target: React.RefObject<Element>,
   callback: ResizeObserverCallback,
   options: UseResizeObserverOptions = {}
 ) {
-  const { window = defaultWindow, ...observerOptions } = options;
-  let observer: ResizeObserver | undefined;
+  const { window = globalThis.window, ...observerOptions } = options;
+  const observerRef = useRef<ResizeObserver | null>(null);
 
-  const cleanup = () => {
-    if (observer) {
-      observer.disconnect();
-      observer = undefined;
+  useEffect(() => {
+    const element = target.current;
+    if (!element) return;
+
+    // 清理之前的观察者
+    if (observerRef.current) {
+      observerRef.current.disconnect();
     }
-  };
 
-  const targets = computed(() => {
-    const _targets = toValue(target);
-    return Array.isArray(_targets) ? _targets.map(el => unrefElement(el)) : [unrefElement(_targets)];
-  });
+    // 创建新的观察者
+    observerRef.current = new ResizeObserver(callback);
+    observerRef.current.observe(element, observerOptions);
 
-  const stopWatch = watch(
-    targets,
-    els => {
-      cleanup();
-      observer = new ResizeObserver(callback);
-      for (const _el of els) {
-        if (_el) observer!.observe(_el, observerOptions);
+    // 清理函数
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+        observerRef.current = null;
       }
-    },
-    { immediate: true, flush: 'post' }
-  );
+    };
+  }, [target, callback, options]);
 
-  const stop = () => {
-    cleanup();
-    stopWatch();
-  };
-
-  tryOnScopeDispose(stop);
-
-  return { stop };
+  // 组件卸载时清理
+  useEffect(() => {
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+        observerRef.current = null;
+      }
+    };
+  }, []);
 };

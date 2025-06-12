@@ -30,16 +30,16 @@ const CastList = forwardRef<CastListRef, CastListProps>(({
 }, ref) => {
   // 类型控制器
   const typeMapRef = useRef<Map<CastMethod, boolean>>(new Map());
-  
+
   // 显示弹幕
   const [casts, setCasts] = useState<DyMessage[]>([]);
   // 所有弹幕
   const allCastsRef = useRef<DyMessage[]>([]);
-  
+
   // 列表引用
   const listRef = useRef<List>(null);
   const isAtBottomRef = useRef(true);
-  
+
   // 判断是否滚动到底部的容差值
   const SCROLL_BTH = 50;
 
@@ -72,30 +72,36 @@ const CastList = forwardRef<CastListRef, CastListProps>(({
    */
   const addCasts = useCallback((msgs: DyMessage[], isClear: boolean = false) => {
     const list: DyMessage[] = msgs.filter(item => {
-      if (item.method) return !!typeMapRef.current.get(item.method);
-      else return false;
+      const allowed = item.method ? !!typeMapRef.current.get(item.method) : false;
+      return allowed;
     });
-    
+
+    if (list.length > 0) {
+      console.log(`📨 CastList (${title}) displaying ${list.length} messages:`, list.map(m => `${m.method}:${m.user?.name}`));
+    }
+
     if (isClear) {
       setCasts(list);
     } else {
       setCasts(prev => [...prev, ...list]);
     }
-    
+
     // 自动滚动到底部
     setTimeout(() => {
-      if (isAtBottomRef.current && listRef.current) {
-        listRef.current.scrollToItem(casts.length - 1, 'end');
+      if (isAtBottomRef.current && listRef.current && list.length > 0) {
+        const newLength = (isClear ? list.length : casts.length + list.length);
+        listRef.current.scrollToItem(Math.max(0, newLength - 1), 'end');
       }
     }, 0);
-  }, [casts.length]);
+  }, [casts.length, types]);
 
   // 添加弹幕
   const appendCasts = useCallback((msgs: DyMessage[]) => {
     if (!msgs || !msgs.length) return;
+    console.log(`CastList (${types.join(',')}) received ${msgs.length} messages:`, msgs);
     allCastsRef.current.push(...msgs);
     addCasts(msgs);
-  }, [addCasts]);
+  }, [addCasts, types]);
 
   /**
    * 清空弹幕
@@ -121,6 +127,7 @@ const CastList = forwardRef<CastListRef, CastListProps>(({
 
   // 初始化
   useEffect(() => {
+    console.log(`🎯 CastList (${title}) initializing with types:`, types);
     if (types) {
       for (const key of types) {
         setCastType(key, true);
@@ -129,8 +136,9 @@ const CastList = forwardRef<CastListRef, CastListProps>(({
           typeMapRef.current.set(CastMethod.CONTROL, true);
         }
       }
+      console.log(`📋 CastList (${title}) type map:`, Array.from(typeMapRef.current.entries()));
     }
-  }, [types, setCastType]);
+  }, [types, setCastType, title]);
 
   // 渲染单个弹幕项
   const renderItem = ({ index, style }: { index: number; style: React.CSSProperties }) => {
@@ -181,7 +189,7 @@ const CastList = forwardRef<CastListRef, CastListProps>(({
       <div className="cast-list-main">
         <List
           ref={listRef}
-          height={400} // 这个高度应该动态计算
+          height={Math.max(300, window.innerHeight * 0.4)}
           itemCount={casts.length}
           itemSize={50} // 每项的估计高度
           onScroll={handleScroll}
