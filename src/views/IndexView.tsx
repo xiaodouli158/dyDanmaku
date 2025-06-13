@@ -1,7 +1,8 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import ConnectInput from '../components/ConnectInput';
 import LiveInfo from '../components/LiveInfo';
 import LiveStatusPanel from '../components/LiveStatusPanel';
+import LiveRoomSettings from '../components/LiveRoomSettings';
 import CastList from '../components/CastList';
 import {
   CastMethod,
@@ -20,6 +21,7 @@ import { RelayCast } from '../core/relay';
 import SkMessage from '../components/Message';
 import { formatDate } from '../utils/commonUtil';
 import FileSaver from '../utils/fileUtil';
+import { SpeechUtil } from '../utils/speechUtil';
 import './IndexView.scss';
 
 const IndexView: React.FC = () => {
@@ -31,6 +33,13 @@ const IndexView: React.FC = () => {
   const [roomNum, setRoomNum] = useState<string>('');
   // 转发地址
   const [relayUrl, setRelayUrl] = useState<string>('');
+  // 设置弹窗显示状态
+  const [showSettings, setShowSettings] = useState<boolean>(false);
+  // 语音播报设置
+  const [voiceBroadcastEnabled, setVoiceBroadcastEnabled] = useState<boolean>(() => {
+    const saved = localStorage.getItem('voiceBroadcastEnabled');
+    return saved ? JSON.parse(saved) : false;
+  });
 
   // 直播间信息
   const [cover, setCover] = useState<string>('');
@@ -57,6 +66,22 @@ const IndexView: React.FC = () => {
   const castWsRef = useRef<DyCast | undefined>();
   // 转发客户端
   const relayWsRef = useRef<RelayCast | undefined>();
+  // 语音播报工具
+  const speechUtilRef = useRef<SpeechUtil>(new SpeechUtil());
+
+  /**
+   * 处理语音播报设置变化
+   */
+  const handleVoiceBroadcastChange = useCallback((enabled: boolean) => {
+    setVoiceBroadcastEnabled(enabled);
+    speechUtilRef.current.setEnabled(enabled);
+    localStorage.setItem('voiceBroadcastEnabled', JSON.stringify(enabled));
+  }, []);
+
+  // 初始化语音播报状态
+  useEffect(() => {
+    speechUtilRef.current.setEnabled(voiceBroadcastEnabled);
+  }, [voiceBroadcastEnabled]);
 
   /**
    * 验证房间号
@@ -130,6 +155,11 @@ const IndexView: React.FC = () => {
           case CastMethod.CHAT:
             newCasts.push(msg);
             mainCasts.push(msg);
+            // 语音播报聊天内容
+            if (voiceBroadcastEnabled && msg.user?.name && msg.content) {
+              const text = `${msg.user.name}说：${msg.content}`;
+              speechUtilRef.current.speak(text);
+            }
             break;
           case CastMethod.GIFT:
             if (!msg?.gift?.repeatEnd) {
@@ -158,6 +188,11 @@ const IndexView: React.FC = () => {
           case CastMethod.EMOJI_CHAT:
             newCasts.push(msg);
             mainCasts.push(msg);
+            // 语音播报表情聊天内容
+            if (voiceBroadcastEnabled && msg.user?.name && msg.content) {
+              const text = `${msg.user.name}发送了表情：${msg.content}`;
+              speechUtilRef.current.speak(text);
+            }
             break;
           case CastMethod.ROOM_USER_SEQ:
             setRoomCount(msg.room);
@@ -191,7 +226,7 @@ const IndexView: React.FC = () => {
     if (relayWsRef.current && relayWsRef.current.isConnected()) {
       relayWsRef.current.send(JSON.stringify(msgs));
     }
-  }, [setRoomCount]);
+  }, [setRoomCount, voiceBroadcastEnabled]);
 
   /**
    * 添加控制台消息
@@ -495,16 +530,14 @@ const IndexView: React.FC = () => {
           />
         </div>
         <div className="view-left-bottom">
-          <div className="view-left-tools">
-            <div className="view-left-tool" title="保存弹幕" onClick={saveCastToFile}>
-              <i className="ice-save"></i>
-            </div>
-            <div className="view-left-tool" title="测试聊天礼物" onClick={testChatGiftMessages}>
-              <i className="ice-test">💬</i>
-            </div>
-            <div className="view-left-tool" title="测试社交消息" onClick={testSocialMessages}>
-              <i className="ice-test">🧪</i>
-            </div>
+          <div className="view-left-settings">
+            <button
+              className="settings-btn"
+              onClick={() => setShowSettings(true)}
+              title="直播间设置"
+            >
+              直播间设置
+            </button>
           </div>
           <hr className="hr" />
           <LiveStatusPanel ref={statusPanelRef} status={connectStatus} />
@@ -524,6 +557,16 @@ const IndexView: React.FC = () => {
           theme="dark"
         />
       </div>
+
+      {/* 设置弹窗 */}
+      {showSettings && (
+        <LiveRoomSettings
+          isOpen={showSettings}
+          onClose={() => setShowSettings(false)}
+          voiceBroadcastEnabled={voiceBroadcastEnabled}
+          onVoiceBroadcastChange={handleVoiceBroadcastChange}
+        />
+      )}
     </div>
   );
 };

@@ -1,0 +1,243 @@
+$overlay-bg: rgba(0, 0, 0, 0.5);
+$modal-bg: #ffffff;
+$border-color: #e1e5e9;
+$primary-color: #68be8d;
+$text-color: #333333;
+$text-secondary: #666666;
+$text-muted: #999999;
+$close-color: #999999;
+$close-hover: #666666;
+
+.live-room-settings-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: $overlay-bg;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+}
+
+.live-room-settings-modal {
+  background-color: $modal-bg;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.settings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid $border-color;
+  background-color: #fafbfc;
+}
+
+.settings-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: $text-color;
+  font-family: 'mkwxy', sans-serif;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: $close-color;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  transition: color 0.2s ease;
+  
+  &:hover {
+    color: $close-hover;
+  }
+}
+
+.settings-content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.setting-section {
+  margin-bottom: 32px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.section-title {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: $text-color;
+  font-family: 'mkwxy', sans-serif;
+}
+
+.setting-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-bottom: 1px solid #f0f0f0;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.setting-info {
+  flex: 1;
+  margin-right: 16px;
+}
+
+.setting-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: $text-color;
+  margin-bottom: 4px;
+  font-family: 'mkwxy', sans-serif;
+}
+
+.setting-desc {
+  margin: 0;
+  font-size: 12px;
+  color: $text-muted;
+  line-height: 1.4;
+}
+
+.setting-control {
+  flex-shrink: 0;
+}
+
+/* 开关样式 */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.3s;
+  border-radius: 24px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+input:checked + .slider {
+  background-color: $primary-color;
+}
+
+input:checked + .slider:before {
+  transform: translateX(24px);
+}
+
+.settings-footer {
+  padding: 16px 24px;
+  border-top: 1px solid $border-color;
+  background-color: #fafbfc;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'mkwxy', sans-serif;
+  
+  &.btn-primary {
+    background-color: $primary-color;
+    color: white;
+    
+    &:hover {
+      background-color: #5ba67a;
+    }
+    
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .live-room-settings-modal {
+    width: 95%;
+    max-height: 90vh;
+  }
+  
+  .settings-header {
+    padding: 16px 20px;
+  }
+  
+  .settings-content {
+    padding: 20px;
+  }
+  
+  .setting-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .setting-info {
+    margin-right: 0;
+  }
+}
